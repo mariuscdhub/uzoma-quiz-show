@@ -1,0 +1,159 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Question, Answer } from '../data/questions';
+import GlareHover from './GlareHover';
+import StarBorder from './StarBorder';
+
+interface Props {
+  question: Question;
+  onComplete: () => void;
+}
+
+export default function Quiz({ question, onComplete }: Props) {
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(45);
+  const [timerActive, setTimerActive] = useState(true);
+
+  useEffect(() => {
+    if (!timerActive || selectedAnswer) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleAnswerClick('TIMEOUT'); // Treat timeout as no answer
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timerActive, selectedAnswer]);
+
+  const handleAnswerClick = (answerId: string) => {
+    if (selectedAnswer) return; // Prevent multiple clicks
+    setSelectedAnswer(answerId);
+    setTimerActive(false);
+    
+    // Reveal correct answer after a short dramatic pause
+    setTimeout(() => {
+      setIsRevealed(true);
+    }, 1500);
+  };
+
+  const getButtonClass = (ans: Answer) => {
+    if (!selectedAnswer) return 'game-button text-white hover:text-brand-gold';
+    
+    if (isRevealed) {
+      if (ans.isCorrect) return 'game-button correct text-white';
+      if (selectedAnswer === ans.id && !ans.isCorrect) return 'game-button incorrect text-white';
+      return 'game-button opacity-50 text-slate-300'; // Dim others
+    }
+
+    // Pending reveal state
+    if (selectedAnswer === ans.id) return 'bg-brand-gold text-slate-900 border-white shadow-[0_0_20px_rgba(251,191,36,0.8)] scale-105';
+    return 'game-button opacity-50 text-slate-300';
+  };
+
+  return (
+    <div className="w-full max-w-5xl mx-auto p-4 flex flex-col min-h-[80vh] justify-center relative">
+      
+      {/* Timer UI */}
+      <div className="w-full max-w-2xl mx-auto mb-8">
+        <div className="w-full bg-slate-800/50 rounded-full h-3 overflow-hidden border border-slate-700">
+          <motion.div 
+            className="h-full bg-brand-gold"
+            initial={{ width: '100%' }}
+            animate={{ width: `${(timeLeft / 45) * 100}%` }}
+            transition={{ duration: 1, ease: "linear" }}
+          />
+        </div>
+        <div className={`text-center mt-2 font-black text-3xl ${timeLeft <= 10 ? 'text-brand-red animate-pulse' : 'text-brand-gold'}`}>
+          {timeLeft}
+        </div>
+      </div>
+
+      {question.isMystery && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="absolute -top-10 left-1/2 -translate-x-1/2 bg-brand-red text-white px-8 py-2 rounded-full font-black text-2xl uppercase tracking-widest shadow-[0_0_30px_rgba(239,68,68,0.8)] z-50 whitespace-nowrap"
+        >
+          🚨 Question Mystère 🚨
+        </motion.div>
+      )}
+
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-12"
+      >
+        <GlareHover borderRadius="1rem" glareOpacity={0.5} glareSize={200} className="w-full">
+          <StarBorder color="#e2e8f0" speed="8s" className="rounded-2xl" as="div">
+            <div className="question-box p-8 md:p-12 text-center rounded-2xl w-full h-full">
+              <span className="text-brand-gold font-bold tracking-widest uppercase mb-4 block">Question {question.id} : {question.title}</span>
+              <h2 className="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-md">
+                {question.text}
+              </h2>
+            </div>
+          </StarBorder>
+        </GlareHover>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {question.answers.map((ans, idx) => (
+          <GlareHover 
+            key={ans.id} 
+            borderRadius="9999px" 
+            className="w-full"
+            glareOpacity={0.6}
+            glareSize={150}
+            active={selectedAnswer === ans.id}
+          >
+            <StarBorder color="#fbbf24" speed="4s" className="rounded-full w-full" as="div">
+              <motion.button
+                initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 + idx * 0.1 }}
+                onClick={() => handleAnswerClick(ans.id)}
+                disabled={!!selectedAnswer}
+                className={`
+                  w-full text-left p-6 md:p-8 rounded-full text-xl md:text-3xl font-bold
+                  flex items-center space-x-6 transition-all duration-300
+                  ${getButtonClass(ans)}
+                  ${selectedAnswer === ans.id ? 'active-glare' : ''}
+                `}
+              >
+                <span className="text-brand-gold font-black" translate="no">{ans.id}:</span>
+                <span className="flex-1">{ans.text}</span>
+              </motion.button>
+            </StarBorder>
+          </GlareHover>
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {isRevealed && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-center mt-16"
+          >
+            <GlareHover borderRadius="9999px" glareColor="#fbbf24" glareOpacity={0.8} className="mx-auto">
+              <StarBorder color="#22c55e" speed="3s" className="rounded-full" as="div">
+                <button
+                  onClick={onComplete}
+                  className="game-button correct px-12 py-4 rounded-full text-2xl font-black uppercase tracking-widest text-white hover:scale-105"
+                >
+                  Suite ➔
+                </button>
+              </StarBorder>
+            </GlareHover>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
