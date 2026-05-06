@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/framer-motion-fix.d.ts","./src/main.tsx","./src/components/chromagrid.tsx","./src/components/glarehover.tsx","./src/components/questiongrid.tsx","./src/components/quiz.tsx","./src/components/starborder.tsx","./src/components/wheel.tsx","./src/data/questions.ts"],"version":"5.6.3"}
