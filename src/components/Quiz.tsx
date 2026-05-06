@@ -6,7 +6,7 @@ import StarBorder from './StarBorder';
 
 interface Props {
   question: Question;
-  onComplete: () => void;
+  onComplete: (isCorrect: boolean) => void;
 }
 
 export default function Quiz({ question, onComplete }: Props) {
@@ -14,6 +14,7 @@ export default function Quiz({ question, onComplete }: Props) {
   const [isRevealed, setIsRevealed] = useState(false);
   const [timeLeft, setTimeLeft] = useState(45);
   const [timerActive, setTimerActive] = useState(true);
+  const [showPenalty, setShowPenalty] = useState(false);
 
   useEffect(() => {
     if (!timerActive || selectedAnswer) return;
@@ -55,6 +56,18 @@ export default function Quiz({ question, onComplete }: Props) {
     // Pending reveal state
     if (selectedAnswer === ans.id) return 'bg-brand-gold text-slate-900 border-white shadow-[0_0_20px_rgba(251,191,36,0.8)] scale-105';
     return 'game-button opacity-50 text-slate-300';
+  };
+
+  const handleNextClick = () => {
+    const selectedAns = question.answers.find(a => a.id === selectedAnswer);
+    const isCorrect = selectedAns ? selectedAns.isCorrect : false;
+
+    if (!isCorrect && !showPenalty) {
+      setShowPenalty(true);
+      return;
+    }
+
+    onComplete(isCorrect);
   };
 
   return (
@@ -135,16 +148,17 @@ export default function Quiz({ question, onComplete }: Props) {
       </div>
 
       <AnimatePresence>
-        {isRevealed && (
+        {isRevealed && !showPenalty && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             className="flex justify-center mt-16"
           >
             <GlareHover borderRadius="9999px" glareColor="#fbbf24" glareOpacity={0.8} className="mx-auto">
               <StarBorder color="#22c55e" speed="3s" className="rounded-full" as="div">
                 <button
-                  onClick={onComplete}
+                  onClick={handleNextClick}
                   className="game-button correct px-12 py-4 rounded-full text-2xl font-black uppercase tracking-widest text-white hover:scale-105"
                 >
                   Suite ➔
@@ -154,6 +168,39 @@ export default function Quiz({ question, onComplete }: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {showPenalty && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
+          >
+            <div className="max-w-2xl w-full">
+              <GlareHover borderRadius="1.5rem" glareOpacity={0.5} glareSize={250} className="w-full">
+                <StarBorder color="#ef4444" speed="4s" className="rounded-3xl" as="div">
+                  <div className="bg-slate-900 border-4 border-brand-red p-10 md:p-16 rounded-3xl text-center shadow-[0_0_50px_rgba(239,68,68,0.5)]">
+                    <h2 className="text-5xl md:text-7xl font-black text-brand-red mb-6 uppercase tracking-widest">
+                      PENALTY!
+                    </h2>
+                    <p className="text-xl md:text-3xl text-white font-bold mb-10 leading-relaxed">
+                      {question.penalty || "You must perform a penalty!"}
+                    </p>
+                    <button
+                      onClick={handleNextClick}
+                      className="game-button incorrect px-12 py-4 rounded-full text-2xl font-black uppercase tracking-widest text-white hover:scale-105"
+                    >
+                      J'ai fini mon gage ➔
+                    </button>
+                  </div>
+                </StarBorder>
+              </GlareHover>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

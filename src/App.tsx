@@ -15,6 +15,7 @@ export default function App() {
   const [winner, setWinner] = useState<string>('');
   const [playedQuestions, setPlayedQuestions] = useState<number[]>([]);
   const [currentQuestionId, setCurrentQuestionId] = useState<number | null>(null);
+  const [scores, setScores] = useState<Record<string, number>>({});
 
   const handleWheelResult = (selectedWinner: string) => {
     setWinner(selectedWinner);
@@ -28,10 +29,18 @@ export default function App() {
     setScreen('quiz');
   };
 
-  const handleQuizComplete = () => {
+  const handleQuizComplete = (isCorrect: boolean) => {
     if (currentQuestionId) {
       setPlayedQuestions((prev) => [...prev, currentQuestionId]);
     }
+    
+    if (isCorrect && winner && winner !== 'Mystère') {
+      setScores(prev => ({
+        ...prev,
+        [winner]: (prev[winner] || 0) + 1
+      }));
+    }
+
     setScreen('wheel');
     setWinner('');
     setCurrentQuestionId(null);
@@ -50,6 +59,18 @@ export default function App() {
           className="opacity-40"
         />
         <div className="absolute top-0 left-0 w-full h-full bg-slate-950/60 pointer-events-none"></div>
+      </div>
+
+      {/* Scoreboard */}
+      <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50 flex flex-col gap-2">
+        {Object.entries(scores).map(([player, score]) => (
+          <div key={player} className="bg-slate-900/80 backdrop-blur-md border border-brand-gold/50 px-4 py-2 rounded-full flex items-center justify-between gap-4 shadow-lg">
+            <span className="text-white font-bold">{player}</span>
+            <span className="bg-brand-gold text-slate-900 w-8 h-8 rounded-full flex items-center justify-center font-black">
+              {score}
+            </span>
+          </div>
+        ))}
       </div>
 
       <AnimatePresence mode="wait">
