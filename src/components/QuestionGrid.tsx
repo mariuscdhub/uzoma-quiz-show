@@ -19,7 +19,7 @@ export default function QuestionGrid({ playedQuestions, onSelect, winner }: Prop
         className="text-center"
       >
         <h2 className="text-2xl md:text-4xl font-black text-white mb-4 uppercase tracking-widest drop-shadow-lg">
-          C'est au tour de
+          It's the turn of
         </h2>
         <div className="text-4xl md:text-5xl font-black text-brand-gold drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
           {winner} !

@@ -93,7 +93,7 @@ export default function Quiz({ question, onComplete }: Props) {
           animate={{ opacity: 1, scale: 1 }}
           className="absolute -top-10 left-1/2 -translate-x-1/2 bg-brand-red text-white px-8 py-2 rounded-full font-black text-2xl uppercase tracking-widest shadow-[0_0_30px_rgba(239,68,68,0.8)] z-50 whitespace-nowrap"
         >
-          🚨 Question Mystère 🚨
+          🚨 Mystery Question 🚨
         </motion.div>
       )}
 
@@ -144,7 +144,7 @@ export default function Quiz({ question, onComplete }: Props) {
                   onClick={handleNextClick}
                   className="game-button correct px-12 py-4 rounded-full text-2xl font-black uppercase tracking-widest text-white hover:scale-105"
                 >
-                  Suite ➔
+                  Next ➔
                 </button>
           </motion.div>
         )}
@@ -170,7 +170,7 @@ export default function Quiz({ question, onComplete }: Props) {
                       onClick={handleNextClick}
                       className="game-button incorrect px-12 py-4 rounded-full text-2xl font-black uppercase tracking-widest text-white hover:scale-105"
                     >
-                      Question suivante ➔
+                      Next Question ➔
                     </button>
                   </div>
             </div>

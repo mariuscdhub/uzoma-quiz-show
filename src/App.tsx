@@ -31,7 +31,7 @@ export default function App() {
       setPlayedQuestions((prev) => [...prev, currentQuestionId]);
     }
     
-    if (isCorrect && winner && winner !== 'Mystère') {
+    if (isCorrect && winner && winner !== 'Mystery') {
       setScores(prev => ({
         ...prev,
         [winner]: (prev[winner] || 0) + 1
@@ -76,7 +76,7 @@ export default function App() {
             className="w-full flex flex-col items-center"
           >
             <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-gold to-yellow-600 mb-8 uppercase tracking-widest drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] text-center">
-              Qui veut répondre<br/><span className="text-white text-3xl md:text-5xl drop-shadow-md">à la question ?</span>
+              Who wants to answer<br/><span className="text-white text-3xl md:text-5xl drop-shadow-md">the question?</span>
             </h1>
             <Wheel onResult={handleWheelResult} />
             

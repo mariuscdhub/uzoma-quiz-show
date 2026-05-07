@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const SECTIONS = ["Marius", "Uzoma", "Public"];
+const SECTIONS = ["Marius", "Uzoma", "Audience"];
 const COLORS = ["#1e3a8a", "#16a34a", "#b91c1c"];
 
 export default function Wheel({ onResult }: { onResult: (winner: string) => void }) {
