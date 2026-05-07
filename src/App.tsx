@@ -4,9 +4,6 @@ import Wheel from './components/Wheel';
 import QuestionGrid from './components/QuestionGrid';
 import Quiz from './components/Quiz';
 import { questions } from './data/questions';
-import GlareHover from './components/GlareHover';
-import StarBorder from './components/StarBorder';
-import ChromaGrid from './components/ChromaGrid';
 
 type ScreenState = 'wheel' | 'selection' | 'quiz';
 
@@ -49,15 +46,10 @@ export default function App() {
   const currentQuestion = questions.find((q) => q.id === currentQuestionId);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden">
+    <div className="min-h-screen w-full flex flex-col items-center justify-start py-12 px-4 md:py-16 md:px-8 relative overflow-y-auto overflow-x-hidden">
       {/* Background decorations */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-        <ChromaGrid 
-          columns={6} 
-          rows={4} 
-          radius={400} 
-          className="opacity-40"
-        />
+
         <div className="absolute top-0 left-0 w-full h-full bg-slate-950/60 pointer-events-none"></div>
       </div>
 
@@ -83,7 +75,7 @@ export default function App() {
             transition={{ duration: 0.5 }}
             className="w-full flex flex-col items-center"
           >
-            <h1 className="text-4xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-gold to-yellow-600 mb-12 uppercase tracking-widest drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] text-center">
+            <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-gold to-yellow-600 mb-8 uppercase tracking-widest drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] text-center">
               Qui veut répondre<br/><span className="text-white text-3xl md:text-5xl drop-shadow-md">à la question ?</span>
             </h1>
             <Wheel onResult={handleWheelResult} />
@@ -95,13 +87,9 @@ export default function App() {
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     className="fixed bottom-10 z-50"
                   >
-                    <GlareHover borderRadius="9999px" glareOpacity={0.4} glareSize={150}>
-                      <StarBorder color="#fbbf24" speed="4s" className="rounded-full">
-                        <div className="bg-slate-900 border-4 border-brand-gold px-12 py-6 rounded-full shadow-[0_0_40px_rgba(251,191,36,0.6)]">
-                          <span className="text-4xl md:text-6xl font-black text-white uppercase tracking-widest">{winner} !</span>
-                        </div>
-                      </StarBorder>
-                    </GlareHover>
+                    <div className="bg-slate-900 border-4 border-brand-gold px-12 py-6 rounded-full shadow-[0_0_40px_rgba(251,191,36,0.6)]">
+                      <span className="text-4xl md:text-6xl font-black text-white uppercase tracking-widest">{winner} !</span>
+                    </div>
                   </motion.div>
               )}
             </AnimatePresence>

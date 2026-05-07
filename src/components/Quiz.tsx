@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Question, Answer } from '../data/questions';
-import GlareHover from './GlareHover';
-import StarBorder from './StarBorder';
+
 
 interface Props {
   question: Question;
@@ -71,10 +70,10 @@ export default function Quiz({ question, onComplete }: Props) {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-4 flex flex-col min-h-[80vh] justify-center relative">
+    <div className="w-full max-w-5xl mx-auto p-4 flex flex-col min-h-[80vh] justify-start py-8 relative">
       
       {/* Timer UI */}
-      <div className="w-full max-w-2xl mx-auto mb-8">
+      <div className="w-full max-w-2xl mx-auto mb-4">
         <div className="w-full bg-slate-800/50 rounded-full h-3 overflow-hidden border border-slate-700">
           <motion.div 
             className="h-full bg-brand-gold"
@@ -101,49 +100,35 @@ export default function Quiz({ question, onComplete }: Props) {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-12"
+        className="mb-6"
       >
-        <GlareHover borderRadius="1rem" glareOpacity={0.5} glareSize={200} className="w-full">
-          <StarBorder color="#e2e8f0" speed="8s" className="rounded-2xl" as="div">
-            <div className="question-box p-8 md:p-12 text-center rounded-2xl w-full h-full">
+            <div className="bg-slate-900 border-4 border-slate-700/50 shadow-[0_0_20px_rgba(255,255,255,0.1)] question-box p-6 md:p-8 text-center rounded-2xl w-full h-full">
               <span className="text-brand-gold font-bold tracking-widest uppercase mb-4 block">Question {question.id} : {question.title}</span>
-              <h2 className="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-md">
+              <h2 className="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-md py-4">
                 {question.text}
               </h2>
             </div>
-          </StarBorder>
-        </GlareHover>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         {question.answers.map((ans, idx) => (
-          <GlareHover 
-            key={ans.id} 
-            borderRadius="9999px" 
-            className="w-full"
-            glareOpacity={0.6}
-            glareSize={150}
-            active={selectedAnswer === ans.id}
-          >
-            <StarBorder color="#fbbf24" speed="4s" className="rounded-full w-full" as="div">
               <motion.button
+                key={ans.id}
                 initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 + idx * 0.1 }}
                 onClick={() => handleAnswerClick(ans.id)}
                 disabled={!!selectedAnswer}
                 className={`
-                  w-full text-left p-6 md:p-8 rounded-full text-xl md:text-3xl font-bold
-                  flex items-center space-x-6 transition-all duration-300
+                  w-full text-left p-5 md:p-8 rounded-full text-xl md:text-2xl font-bold
+                  flex items-center space-x-4 md:space-x-6 transition-all duration-300
                   ${getButtonClass(ans)}
-                  ${selectedAnswer === ans.id ? 'active-glare' : ''}
+                  ${selectedAnswer === ans.id ? 'scale-105' : ''}
                 `}
               >
                 <span className="text-brand-gold font-black" translate="no">{ans.id}:</span>
                 <span className="flex-1">{ans.text}</span>
               </motion.button>
-            </StarBorder>
-          </GlareHover>
         ))}
       </div>
 
@@ -155,16 +140,12 @@ export default function Quiz({ question, onComplete }: Props) {
             exit={{ opacity: 0, y: 20 }}
             className="flex justify-center mt-16"
           >
-            <GlareHover borderRadius="9999px" glareColor="#fbbf24" glareOpacity={0.8} className="mx-auto">
-              <StarBorder color="#22c55e" speed="3s" className="rounded-full" as="div">
                 <button
                   onClick={handleNextClick}
                   className="game-button correct px-12 py-4 rounded-full text-2xl font-black uppercase tracking-widest text-white hover:scale-105"
                 >
                   Suite ➔
                 </button>
-              </StarBorder>
-            </GlareHover>
           </motion.div>
         )}
       </AnimatePresence>
@@ -178,8 +159,6 @@ export default function Quiz({ question, onComplete }: Props) {
             className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
           >
             <div className="max-w-2xl w-full">
-              <GlareHover borderRadius="1.5rem" glareOpacity={0.5} glareSize={250} className="w-full">
-                <StarBorder color="#ef4444" speed="4s" className="rounded-3xl" as="div">
                   <div className="bg-slate-900 border-4 border-brand-red p-10 md:p-16 rounded-3xl text-center shadow-[0_0_50px_rgba(239,68,68,0.5)]">
                     <h2 className="text-5xl md:text-7xl font-black text-brand-red mb-6 uppercase tracking-widest">
                       PENALTY!
@@ -191,11 +170,9 @@ export default function Quiz({ question, onComplete }: Props) {
                       onClick={handleNextClick}
                       className="game-button incorrect px-12 py-4 rounded-full text-2xl font-black uppercase tracking-widest text-white hover:scale-105"
                     >
-                      J'ai fini mon gage ➔
+                      Question suivante ➔
                     </button>
                   </div>
-                </StarBorder>
-              </GlareHover>
             </div>
           </motion.div>
         )}

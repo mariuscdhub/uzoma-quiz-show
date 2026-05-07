@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import GlareHover from './GlareHover';
-import StarBorder from './StarBorder';
 
-const SECTIONS = ["Marius", "Uzoma", "Mystère", "Public"];
-const COLORS = ["#1e3a8a", "#16a34a", "#fbbf24", "#b91c1c"];
+const SECTIONS = ["Marius", "Uzoma", "Public"];
+const COLORS = ["#1e3a8a", "#16a34a", "#b91c1c"];
 
 export default function Wheel({ onResult }: { onResult: (winner: string) => void }) {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -54,7 +52,7 @@ export default function Wheel({ onResult }: { onResult: (winner: string) => void
           x="50"
           y="20"
           fill="white"
-          fontSize="6"
+          fontSize="7"
           fontWeight="bold"
           textAnchor="middle"
           transform={`rotate(${startAngle + angle / 2} 50 50)`}
@@ -67,8 +65,8 @@ export default function Wheel({ onResult }: { onResult: (winner: string) => void
   };
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-12">
-      <div className="relative w-80 h-80 md:w-[500px] md:h-[500px]">
+    <div className="flex flex-col items-center justify-center space-y-6 md:space-y-10">
+      <div className="relative w-80 h-80 md:w-[450px] md:h-[450px]">
         {/* Pointer */}
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[40px] border-t-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]" />
         
@@ -86,17 +84,13 @@ export default function Wheel({ onResult }: { onResult: (winner: string) => void
         </motion.div>
       </div>
 
-      <GlareHover borderRadius="9999px" glareOpacity={0.4} glareSize={150}>
-        <StarBorder color="#fbbf24" speed="4s" className="rounded-full">
-          <button
-            onClick={spinWheel}
-            disabled={isSpinning}
-            className="game-button px-16 py-6 text-4xl font-black rounded-full uppercase tracking-widest text-brand-gold disabled:opacity-50 hover:scale-105 active:scale-95"
-          >
-            {isSpinning ? '...' : 'SPIN'}
-          </button>
-        </StarBorder>
-      </GlareHover>
+      <button
+        onClick={spinWheel}
+        disabled={isSpinning}
+        className="game-button px-14 py-5 text-3xl md:text-4xl font-black rounded-full uppercase tracking-widest text-brand-gold disabled:opacity-50 hover:scale-105 active:scale-95"
+      >
+        {isSpinning ? '...' : 'SPIN'}
+      </button>
     </div>
   );
 }
