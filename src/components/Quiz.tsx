@@ -11,7 +11,7 @@ interface Props {
 export default function Quiz({ question, onComplete }: Props) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(45);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [timerActive, setTimerActive] = useState(true);
   const [showPenalty, setShowPenalty] = useState(false);
 
@@ -78,7 +78,7 @@ export default function Quiz({ question, onComplete }: Props) {
           <motion.div 
             className="h-full bg-brand-gold"
             initial={{ width: '100%' }}
-            animate={{ width: `${(timeLeft / 45) * 100}%` }}
+            animate={{ width: `${(timeLeft / 60) * 100}%` }}
             transition={{ duration: 1, ease: "linear" }}
           />
         </div>
